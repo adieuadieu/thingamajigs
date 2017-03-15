@@ -26,6 +26,13 @@ if (CHROME_PATH) {
   const copyface = execSync('cp -R /var/task/headless-chrome /tmp')
   console.log('copied', copyface.toString())
 
+  try {
+    const blah0 = execSync('mkdir /tmp/tmpfs && mount -t tmpfs -o size=200M tmpfs /tmp/tmpfs')
+    console.log('blah', blah0.toString())
+  } catch (error) {
+    console.log('blah fail', error)
+  }
+
   console.log('LOL chrome headless bin path', CHROME_PATH)
 
   const blah1 = spawn('df', ['-h'])
@@ -41,24 +48,24 @@ if (CHROME_PATH) {
 
     '--no-sandbox',
     '--remote-debugging-port=9222',
-    '--user-data-dir=/tmp/user-data',
+    '--user-data-dir=/tmp',
     '--hide-scrollbars',
     '--enable-logging',
     '--log-level=0',
     '--v=99',
     '--single-process',
-    '--data-path=/tmp/data-path',
+    '--data-path=/tmp',
 
     '--ignore-certificate-errors', // Dangerous?
 
     '--no-zygote', // Disables the use of a zygote process for forking child processes. Instead, child processes will be forked and exec'd directly. Note that --no-sandbox should also be used together with this flag because the sandbox needs the zygote to work.
 
     '--homedir=/tmp',
-    '--media-cache-size=0',
+    // '--media-cache-size=0',
     '--disable-lru-snapshot-cache',
     '--disable-setuid-sandbox',
-    '--disk-cache-size=0',
-    '--disk-cache-dir=/tmp/cache-dir',
+    // '--disk-cache-size=0',
+    '--disk-cache-dir=/tmp',
 
     '--use-simple-cache-backend',
     '--enable-low-end-device-mode',
@@ -148,6 +155,14 @@ export async function generatePdf (event, context, callback) {
                   JSON.stringify({ id: id++, method: 'Page.navigate', params: { url } }),
                   (error3) => {
                     console.log('ws error3?', error3)
+
+                    ws.send(
+                      JSON.stringify({ id: id++, method: 'Page.captureScreenshot', params: {} }),
+                      (error4) => {
+                        console.log('ws error4?', error4)
+                      },
+                    )
+                    // Next: try taking a screenshot, anyway.
                   },
                 )
               })

@@ -2,7 +2,7 @@ const path = require('path')
 const decompress = require('decompress')
 const webpack = require('webpack')
 
-const chromeTarball = path.join(__dirname, 'lib/chrome-headless-linux-x64.tar.gz')
+const chromeTarball = path.join(__dirname, 'lib/no-shm-chrome-headless-linux-x64.tar.gz')
 const webpackDir = path.join(__dirname, '.webpack/')
 
 function ExtractTarballPlugin (archive, to) {

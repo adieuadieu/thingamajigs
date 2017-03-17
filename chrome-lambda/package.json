@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "handler.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adieuadieu/thingamajigs/tree/master/chrome-lambda"
+  },
   "dependencies": {
     "chrome-remote-interface": "^0.18.0",
-    "got": "^6.7.1",
-    "semver": "^5.3.0",
-    "ws": "^1.1.4"
+    "got": "^6.7.1"
   },
   "devDependencies": {
     "babel-core": "^6.24.0",

@@ -1,6 +1,8 @@
 /*
 
-Taken from https://gist.github.com/yyang/f88c4cfa49daa6db2f4855d018aadbdc
+Presumably, Copyright Steve Yang (https://github.com/yyang)
+https://gist.github.com/yyang/f88c4cfa49daa6db2f4855d018aadbdc
+
 Modified and adapted specifically for Lambda Node 4.3.2
 
 */

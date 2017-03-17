@@ -30,21 +30,21 @@ module.exports.run = (event, context, callback) => {
     }
   )
 
-  const waitUntilReady = startTime =>
+  const waitUntilChromeIsReady = startTime =>
     new Promise(
       (resolve, reject) =>
         Date.now() - startTime < STARTUP_TIMEOUT
           ? get('http://localhost:9222/json')
               .then(resolve)
               .catch(() => {
-                waitUntilReady(startTime)
+                waitUntilChromeIsReady(startTime)
                   .then(resolve)
                   .catch(reject)
               })
           : reject()
     )
 
-  waitUntilReady(Date.now())
+  waitUntilChromeIsReady(Date.now())
     .then(() =>
       cdp()
         .then((client) => {
@@ -54,15 +54,16 @@ module.exports.run = (event, context, callback) => {
           const requestsMade = []
           let doneLoading = false
 
-          const waitUntilLoaded = startTime =>
+          const waitUntilPageIsLoaded = startTime =>
             new Promise(
               (resolve, reject) =>
                 !doneLoading &&
                   Date.now() - startTime < LOADING_TIMEOUT
                   ? setTimeout(
-                      () => {
-                        waitUntilLoaded(startTime).then(resolve)
-                      },
+                      () =>
+                        waitUntilPageIsLoaded(startTime).then(
+                          resolve
+                        ),
                       100
                     )
                   : resolve()
@@ -77,7 +78,7 @@ module.exports.run = (event, context, callback) => {
 
           Promise.all([Network.enable(), Page.enable()])
             .then(() => Page.navigate({ url }))
-            .then(() => waitUntilLoaded(Date.now()))
+            .then(() => waitUntilPageIsLoaded(Date.now()))
             .then(() => {
               client.close()
               chrome.kill()

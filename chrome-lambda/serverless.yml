@@ -2,7 +2,7 @@ service: headless-chrome-example
 
 provider:
   name: aws
-  runtime: nodejs4.3
+  runtime: nodejs6.10
   stage: dev
   region: us-west-2
 
@@ -13,7 +13,6 @@ package:
     - node_modules/**
     - headless-chrome/**
     - handler.js
-    - buffer-polyfill.js
 
 functions:
   mimir:

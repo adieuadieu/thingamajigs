@@ -1,7 +1,5 @@
 'use strict'
 
-require('./buffer-polyfill')
-
 const childProcess = require('child_process')
 const os = require('os')
 const path = require('path')
@@ -30,7 +28,7 @@ module.exports.run = (event, context, callback) => {
     }
   )
 
-  const waitUntilChromeIsReady = startTime =>
+  const waitUntilChromeIsReady = (startTime = Date.now()) =>
     new Promise(
       (resolve, reject) =>
         Date.now() - startTime < STARTUP_TIMEOUT
@@ -44,19 +42,20 @@ module.exports.run = (event, context, callback) => {
           : reject()
     )
 
-  waitUntilChromeIsReady(Date.now())
+  waitUntilChromeIsReady()
     .then(() =>
       cdp()
         .then((client) => {
           const url = URL_TO_LOAD
-          const Network = client.Network
-          const Page = client.Page
+          const { Network, Page } = client
           const requestsMade = []
           let doneLoading = false
 
-          const waitUntilPageIsLoaded = startTime =>
+          const waitUntilPageIsLoaded = (
+            startTime = Date.now()
+          ) =>
             new Promise(
-              (resolve, reject) =>
+              resolve =>
                 !doneLoading &&
                   Date.now() - startTime < LOADING_TIMEOUT
                   ? setTimeout(
@@ -78,7 +77,7 @@ module.exports.run = (event, context, callback) => {
 
           Promise.all([Network.enable(), Page.enable()])
             .then(() => Page.navigate({ url }))
-            .then(() => waitUntilPageIsLoaded(Date.now()))
+            .then(() => waitUntilPageIsLoaded())
             .then(() => {
               client.close()
               chrome.kill()

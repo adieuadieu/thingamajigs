@@ -77,8 +77,8 @@ async function getData() {
   return cleanData
 }
 
-function render(books, limit = 5) {
-  console.log('\n\n ------ \n\n')
+function render(heading, books, limit = 5) {
+  console.log(`\n\n------\n${heading}\n______\n\n`)
 
   console.log(
     books
@@ -108,6 +108,7 @@ async function main() {
   const ratingAvgSum = books.reduce((sum, book) => sum + book.averageRating, 0)
 
   render(
+    'Most popular shortest recent best',
     books.map(book => ({
       ...book,
       weightedRating:
@@ -119,6 +120,28 @@ async function main() {
   )
 
   render(
+    'i dunno',
+    books.map(book => ({
+      ...book,
+      weightedRating:
+        book.averageRating * book.ratingsCount -
+        (5 - book.averageRating) * book.ratingsCount,
+    }))
+  )
+
+  render(
+    'Longest recent best',
+    books.map(book => ({
+      ...book,
+      weightedRating:
+        book.averageRating *
+        book.numPages *
+        (1 / (new Date().getFullYear() + 1 - book.publicationYear)),
+    }))
+  )
+
+  render(
+    'Recent best',
     books.map(book => ({
       ...book,
       weightedRating:
@@ -128,6 +151,7 @@ async function main() {
   )
 
   render(
+    'Shortest recent best',
     books.map(book => ({
       ...book,
       weightedRating:

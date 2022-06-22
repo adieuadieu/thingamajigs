@@ -38,7 +38,7 @@
     "buffer-safe": "^1.0.0",
     "buffer-v6-polyfill": "^1.0.3",
     "chrome-remote-interface": "^0.18.0",
-    "got": "^6.7.1",
+    "got": "^11.8.5",
     "uuid": "^3.0.1",
     "ws": "1.1.4"
   },
